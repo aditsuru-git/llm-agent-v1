@@ -1,0 +1,10 @@
+{
+  "welcome_color": "#FF69B4",
+  "instruction_color": "#87CEEB",
+  "user_color": "#32CD32",
+  "chat_color": "#F0F8FF",
+  "ai_color": "#FF69B4",
+  "spinner_color": "#DDA0DD",
+  "system_color": "#FF4500",
+  "character_name": "Chizuru"
+}
