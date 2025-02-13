@@ -15,19 +15,20 @@ function fileToGenerativePart(filePath) {
 
 function readImages(filePath) {
   try {
-    if (!filePath.length) return "Provide image paths in proper format!";
+    if (!filePath.length)
+      return "System: Provide image paths in proper format!";
 
     const fileParts = [];
     filePath.forEach((file) => {
-      if (!fs.existsSync(file)) fileParts.push("File path doesn't exist");
-      if (!isInPlayground(file)) fileParts.push("File is outside playground");
+      if (!fs.existsSync(file)) return "File path doesn't exist";
+      if (!isInPlayground(file)) return "File is outside playground";
       else {
         fileParts.push(fileToGenerativePart(file));
       }
     });
     return fileParts;
   } catch (err) {
-    return `Couldn't perform operation: ${err}`;
+    return `System: Couldn't perform operation: ${err}`;
   }
 }
 

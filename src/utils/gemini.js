@@ -12,15 +12,19 @@ import {
   deleteFile,
   createFile,
   createDir,
+  deleteFolder,
 } from "./fileOperations.js";
 import { readImages } from "./readImages.js";
 import { takeWebScreenshot } from "./webScraper.js";
+import { readAudio } from "./readAudio.js";
+import { readVideo } from "./readVideos.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 dotenv.config();
 
+// Initialize model and chat
 const persona = JSON.parse(
   fs.readFileSync(path.join(__dirname, "..", "config", "persona.json"), "utf8")
 );
@@ -38,40 +42,48 @@ const model = genAI.getGenerativeModel({
   },
 });
 
-const chat = model.startChat({
+let chat = model.startChat({
   history: [],
 });
 
+// Reset chat if needed
+function resetChat() {
+  chat = model.startChat({
+    history: [],
+  });
+  return "System: Chat has been reset";
+}
+
+// Simplified chat handler
 async function startChat(prompt) {
   try {
     const result = await chat.sendMessage(prompt);
     const response = result.response.text();
     return typeof response === "string" ? JSON.parse(response) : response;
-  } catch (error) {
-    console.error("Chat error:", error);
+  } catch (err) {
     return {
       type: "response",
       thinking: "Error occurred",
-      response: "Sorry, I encountered an error processing your request.",
+      response: `System: ${err}`,
     };
   }
 }
 
+// Main emulation function with simplified error handling
 async function emulateAgent(prompt) {
   try {
     const response = await startChat(prompt);
-    console.log(response);
+    console.log(JSON.stringify(response));
     switch (response.type) {
       case "response":
         return response.response;
-      case "function":
-        console.log("function was called: ", response.function);
+
+      case "function": {
         let metaData = [];
         if (response.metaData) {
           metaData = response.metaData
-            .split(",")
+            .split("::")
             .map((element) => element.trim());
-          console.log("metaData: ", metaData);
         }
 
         let result;
@@ -92,23 +104,33 @@ async function emulateAgent(prompt) {
             result = await createDir(...metaData);
             break;
           case "readImages":
-            result = await readImages(...metaData);
-            break;
+            result = await readImages(metaData);
+            return await emulateAgent(result);
+          case "readAudio":
+            result = await readAudio(...metaData);
+            return await emulateAgent(result);
+          case "readVideo":
+            result = await readVideo(...metaData);
+            return await emulateAgent(result);
           case "takeWebScreenshot":
             result = await takeWebScreenshot(...metaData);
+            break;
+          case "deleteFolder":
+            result = await deleteFolder(...metaData);
             break;
           default:
             result = "System: Function doesn't exist.";
         }
+
         return await emulateAgent(JSON.stringify(result));
+      }
 
       default:
-        return await emulateAgent("System: Provide a valid 'type'");
+        return emulateAgent("Provide a valid function");
     }
-  } catch (error) {
-    console.error("Emulation error:", error);
-    return "System: An error occurred while processing your request.";
+  } catch {
+    return emulateAgent("Provide a valid type");
   }
 }
 
-export { emulateAgent };
+export { emulateAgent, resetChat };

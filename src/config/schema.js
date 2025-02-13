@@ -27,6 +27,9 @@ export default {
         "createDir",
         "readImages",
         "takeWebScreenshot",
+        "deleteFolder",
+        "readAudio",
+        "readVideo",
       ],
       description:
         "Function name to execute (only for type: function). This list can be updated in the future.",

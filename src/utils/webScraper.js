@@ -7,31 +7,36 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
- * Takes a screenshot of a webpage with advanced error handling and cleanup
+ * Takes a screenshot of a webpage with graceful error handling
  * @param {string} url - The URL to screenshot
  * @param {number} scrollPosition - Vertical scroll position (default: 0)
- * @returns {Promise<Object>} - Screenshot path and context information
+ * @returns {Promise<Object|string>} - Screenshot info object or error message
  */
 async function takeWebScreenshot(url, scrollPosition = 0) {
   // Validate URL
   try {
     new URL(url);
   } catch {
-    throw new Error("Invalid URL provided");
+    return "System: Invalid URL provided";
   }
 
-  // Validate and normalize scroll position
+  // Validate scroll position
   scrollPosition = Math.max(0, parseInt(scrollPosition) || 0);
 
   // Ensure screenshots directory exists
   const screenshotsDir = path.join(
     __dirname,
     "..",
+    "..",
     "playground",
     "screenshots"
   );
   if (!fs.existsSync(screenshotsDir)) {
-    fs.mkdirSync(screenshotsDir, { recursive: true });
+    try {
+      fs.mkdirSync(screenshotsDir, { recursive: true });
+    } catch {
+      return "System: Failed to create screenshots directory";
+    }
   }
 
   // Generate unique filename
@@ -46,7 +51,6 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
   let context = null;
 
   try {
-    // Launch browser with security args
     browser = await chromium.launch({
       args: [
         "--disable-gpu",
@@ -56,7 +60,6 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
       ],
     });
 
-    // Create new context with viewport settings
     context = await browser.newContext({
       viewport: { width: 1920, height: 1080 },
       userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
@@ -65,24 +68,26 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
     const page = await context.newPage();
 
     // Navigate with timeout
-    await page.goto(url, {
+    const navigationResult = await page.goto(url, {
       waitUntil: "domcontentloaded",
-      timeout: 30000, // 30 second timeout
+      timeout: 30000,
     });
 
-    // Wait for page load with timeout
-    await page
-      .waitForLoadState("load", {
-        timeout: 30000,
-      })
-      .catch((error) => {
-        console.warn(
-          "Page load timeout, continuing with partial content:",
-          error.message
-        );
-      });
+    if (!navigationResult.ok()) {
+      return `System: Failed to load page: ${navigationResult.status()}`;
+    }
 
-    // Handle scrolling if specified
+    // Wait for page load
+    const loadState = await page
+      .waitForLoadState("load", { timeout: 30000 })
+      .then(() => true)
+      .catch(() => false);
+
+    if (!loadState) {
+      return "System: Page load timeout, could not complete operation";
+    }
+
+    // Handle scrolling
     if (scrollPosition > 0) {
       await page.evaluate((scrollY) => {
         window.scrollTo({
@@ -91,7 +96,6 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
         });
       }, scrollPosition);
 
-      // Wait for scroll and any lazy-loaded content
       await page.waitForTimeout(1000);
     }
 
@@ -117,23 +121,19 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
       },
     };
   } catch (error) {
-    // Delete partial screenshot if it exists
+    // Clean up partial screenshot
     if (fs.existsSync(screenshotPath)) {
-      fs.unlinkSync(screenshotPath);
+      try {
+        fs.unlinkSync(screenshotPath);
+      } catch {
+        // Ignore cleanup errors
+      }
     }
-
-    console.error("Screenshot error:", {
-      url,
-      scrollPosition,
-      error: error.message,
-      stack: error.stack,
-    });
-
-    throw new Error(`Failed to take screenshot: ${error.message}`);
+    return `System: Failed to take screenshot: ${error.message}`;
   } finally {
-    // Ensure cleanup happens even if there's an error
-    if (context) await context.close().catch(console.error);
-    if (browser) await browser.close().catch(console.error);
+    // Cleanup browser resources
+    if (context) await context.close().catch(() => {});
+    if (browser) await browser.close().catch(() => {});
   }
 }
 

@@ -69,4 +69,18 @@ function createDir(directory) {
   }
 }
 
-export { readDir, renameFile, deleteFile, createFile, createDir };
+function deleteFolder(folderPath) {
+  try {
+    if (!fs.existsSync(folderPath))
+      return "Path of the target folder doesn't exist";
+    if (!isInPlayground(folderPath))
+      return "Can't access folder outside the playground";
+
+    fs.rmSync(folderPath, { recursive: true, force: true });
+    return "Folder deleted successfully";
+  } catch (err) {
+    return `Couldn't perform operation: ${err}`;
+  }
+}
+
+export { readDir, renameFile, deleteFile, createFile, createDir, deleteFolder };
