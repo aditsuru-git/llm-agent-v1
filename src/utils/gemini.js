@@ -1,10 +1,6 @@
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { systemInstructions } from "../config/systemInstructions.js";
-import fs from "fs";
-import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import schema from "../config/schema.js";
 import {
   readDir,
@@ -18,18 +14,11 @@ import { readImages } from "./readImages.js";
 import { takeWebScreenshot } from "./webScraper.js";
 import { readAudio } from "./readAudio.js";
 import { readVideo } from "./readVideos.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { persona } from "../config/persona.js";
 
 dotenv.config();
 
-// Initialize model and chat
-const persona = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "..", "config", "persona.json"), "utf8")
-);
-
-const finalSystemInstruction = `Your personality:\n${persona.persona}\n${systemInstructions}\n`;
+const finalSystemInstruction = `Your personality:\n${persona}\n${systemInstructions}\n`;
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
@@ -73,7 +62,6 @@ async function startChat(prompt) {
 async function emulateAgent(prompt) {
   try {
     const response = await startChat(prompt);
-    console.log(JSON.stringify(response));
     switch (response.type) {
       case "response":
         return response.response;
