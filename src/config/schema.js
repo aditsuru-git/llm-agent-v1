@@ -30,6 +30,9 @@ export default {
         "deleteFolder",
         "readAudio",
         "readVideo",
+        "readFile",
+        "editFile",
+        "appendFile",
       ],
       description:
         "Function name to execute (only for type: function). This list can be updated in the future.",

@@ -9,6 +9,9 @@ import {
   createFile,
   createDir,
   deleteFolder,
+  readFile,
+  editFile,
+  appendFile,
 } from "./fileOperations.js";
 import { readImages } from "./readImages.js";
 import { takeWebScreenshot } from "./webScraper.js";
@@ -65,7 +68,6 @@ async function emulateAgent(prompt) {
     switch (response.type) {
       case "response":
         return response.response;
-
       case "function": {
         let metaData = [];
         if (response.metaData) {
@@ -106,10 +108,18 @@ async function emulateAgent(prompt) {
           case "deleteFolder":
             result = await deleteFolder(...metaData);
             break;
+          case "readFile":
+            result = await readFile(...metaData);
+            break;
+          case "editFile":
+            result = await editFile(...metaData);
+            break;
+          case "appendFile":
+            result = await appendFile(...metaData);
+            break;
           default:
             result = "System: Function doesn't exist.";
         }
-
         return await emulateAgent(JSON.stringify(result));
       }
 

@@ -52,7 +52,7 @@ npm start
 
 - View images, videos, and listen to audio files
 - Take screenshots of any webpage
-- Perform create, rename, and delete operations on files and folders
+- Perform CRUD operations on files and folders
 
 > AI can only access files & folders inside `playground`
 

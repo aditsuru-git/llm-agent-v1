@@ -83,4 +83,65 @@ function deleteFolder(folderPath) {
   }
 }
 
-export { readDir, renameFile, deleteFile, createFile, createDir, deleteFolder };
+function readFile(filePath) {
+  try {
+    if (!fs.existsSync(filePath))
+      return "Path of the target file doesn't exist";
+
+    if (fs.lstatSync(filePath).isDirectory())
+      return "Target path is a directory, not a file";
+
+    if (!isInPlayground(filePath))
+      return "Can't access file outside the playground";
+    const result = fs.readFileSync(filePath, "utf8");
+    return JSON.stringify(result);
+  } catch (err) {
+    return `Couldn't perform operation: ${err}`;
+  }
+}
+
+function editFile(filePath, data) {
+  try {
+    if (!fs.existsSync(filePath))
+      return "Path of the target file doesn't exist";
+
+    if (fs.lstatSync(filePath).isDirectory())
+      return "Target path is a directory, not a file";
+
+    if (!isInPlayground(filePath))
+      return "Can't access file outside the playground";
+    fs.writeFileSync(filePath, data);
+    return "System: Success";
+  } catch (err) {
+    return `Couldn't perform operation: ${err}`;
+  }
+}
+
+function appendFile(filePath, data) {
+  try {
+    if (!fs.existsSync(filePath))
+      return "Path of the target file doesn't exist";
+
+    if (fs.lstatSync(filePath).isDirectory())
+      return "Target path is a directory, not a file";
+
+    if (!isInPlayground(filePath))
+      return "Can't access file outside the playground";
+    fs.appendFileSync(filePath, data);
+    return "System: Success";
+  } catch (err) {
+    return `Couldn't perform operation: ${err}`;
+  }
+}
+
+export {
+  readDir,
+  renameFile,
+  deleteFile,
+  createFile,
+  createDir,
+  deleteFolder,
+  readFile,
+  editFile,
+  appendFile,
+};
