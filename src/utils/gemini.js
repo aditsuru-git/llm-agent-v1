@@ -42,7 +42,7 @@ let chat = model.startChat({
 // Reset chat if needed
 function resetChat() {
   chat = model.startChat({
-    history: [],
+    history: chatHistory,
   });
   return "System: Chat has been reset";
 }
