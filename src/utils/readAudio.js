@@ -21,8 +21,8 @@ function readAudio(file, prompt) {
     if (!file) return "System: Provide image paths in proper format!";
 
     const fileParts = [];
-    if (!fs.existsSync(file)) return "File path doesn't exist";
-    if (!isInPlayground(file)) return "File out of reach";
+    if (!fs.existsSync(file)) return "System: File path doesn't exist";
+    if (!isInPlayground(file)) return "System: File out of reach";
     else {
       fileParts.push(fileToGenerativePart(file));
       fileParts.push({ text: prompt });
