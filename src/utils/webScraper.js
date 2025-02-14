@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { playGroundPath } from "../config/configPath.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -24,13 +25,7 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
   scrollPosition = Math.max(0, parseInt(scrollPosition) || 0);
 
   // Ensure screenshots directory exists
-  const screenshotsDir = path.join(
-    __dirname,
-    "..",
-    "..",
-    "playground",
-    "screenshots"
-  );
+  const screenshotsDir = path.join(playGroundPath, "screenshots");
   if (!fs.existsSync(screenshotsDir)) {
     try {
       fs.mkdirSync(screenshotsDir, { recursive: true });

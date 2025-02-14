@@ -22,7 +22,7 @@ function readAudio(file, prompt) {
 
     const fileParts = [];
     if (!fs.existsSync(file)) return "File path doesn't exist";
-    if (!isInPlayground(file)) return "File is outside playground";
+    if (!isInPlayground(file)) return "File out of reach";
     else {
       fileParts.push(fileToGenerativePart(file));
       fileParts.push({ text: prompt });

@@ -1,0 +1,12 @@
+import path from "path";
+
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Path to playground folder
+// export const playGroundPath = path.join(__dirname, "..", "..", "playground");
+export const playGroundPath = path.join(
+  "C:\\Users\\riped\\OneDrive\\Pictures\\Playground-temp"
+);

@@ -1,0 +1,1 @@
+export const userInfo = `I'm Adi, a 16 years old a student balancing studies with my passion for tech, currently diving into web development to earn and gain experience. While I enjoy coding—especially in web dev and AI/ML—my ultimate goal is game development. I see web dev as a stepping stone to fund my dream of building a successful studio and running a company in the future.`;

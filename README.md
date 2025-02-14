@@ -45,7 +45,7 @@ API_KEY=your_gemini_api_key_here
 Start the chat application:
 
 ```bash
-npm start
+npm run test
 ```
 
 ### Features
@@ -80,6 +80,12 @@ Edit `src/config/styles.json` to customize the chat interface colors:
 ### Adjusting Character Persona
 
 Modify `src/config/persona.js` to adjust Model's personality traits and conversation style.
+
+### Changing playground path
+
+You can change the folder to which the AI has access to in `src/config//configPath.js` by changing
+
+`export const playGroundPath = path.join(__dirname, "..", "..", "playground");`
 
 ## Dependencies
 

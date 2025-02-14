@@ -40,7 +40,7 @@ export default {
     metaData: {
       type: "string",
       description:
-        "Comma-separated arguments to pass into the function (only applicable when type is 'function').",
+        "::-separated arguments to pass into the function (only applicable when type is 'function').",
     },
   },
   required: ["type", "thinking"],

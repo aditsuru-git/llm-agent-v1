@@ -18,10 +18,11 @@ import { takeWebScreenshot } from "./webScraper.js";
 import { readAudio } from "./readAudio.js";
 import { readVideo } from "./readVideos.js";
 import { persona } from "../config/persona.js";
+import { chatHistory } from "../config/chatHistory.js";
 
 dotenv.config();
 
-const finalSystemInstruction = `Your personality:\n${persona}\n${systemInstructions}\n`;
+const finalSystemInstruction = `${persona}\n${systemInstructions}\n`;
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
@@ -35,7 +36,7 @@ const model = genAI.getGenerativeModel({
 });
 
 let chat = model.startChat({
-  history: [],
+  history: chatHistory,
 });
 
 // Reset chat if needed

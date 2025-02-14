@@ -10,7 +10,7 @@ const fileManager = new GoogleAIFileManager(process.env.API_KEY);
 async function readVideo(filePath, fileName = Math.random(), prompt) {
   try {
     if (!fs.existsSync(filePath)) return "File path doesn't exist";
-    if (!isInPlayground(filePath)) return "File is outside playground";
+    if (!isInPlayground(filePath)) return "File out of reach";
     const uploadResponse = await fileManager.uploadFile(filePath, {
       mimeType: "video/" + path.extname(filePath).toLowerCase().trim().slice(1),
       displayName: fileName,

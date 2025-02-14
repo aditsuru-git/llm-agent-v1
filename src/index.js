@@ -1,7 +1,7 @@
 import readline from "readline";
 import chalk from "chalk";
 import ora from "ora";
-import { emulateAgent, resetChat } from "./utils/gemini.js";
+import { emulateAgent } from "./utils/gemini.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -64,7 +64,7 @@ const handleInput = async (input) => {
     console.log(
       colors.system("System: ") + colors.chat("Resetting chat history...\n")
     );
-    resetChat();
+
     chatHistory = [];
     displayChatHistory();
     return;
