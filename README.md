@@ -54,18 +54,24 @@ npm run test
 - Take screenshots of any webpage
 - Perform CRUD operations on files and folders
 
-> AI can only access files & folders inside `playground`
+> AI can only access files & folders inside a root directory specified in `src/config/configPath.js`
 
 ### Chat Commands
 
 - `sayonara()` - Exit the chat
 - `reset()` - Clear chat history and start fresh
 
-## Customization
+## Customization Guide
 
-### Modifying UI Colors
+### Overview
 
-Edit `src/config/styles.json` to customize the chat interface colors:
+This chatbot can be customized to fit your needs, from appearance to personality and file access. Below are the key customization options.
+
+---
+
+### UI Customization
+
+Modify `src/config/styles.json` to change the chat interface colors:
 
 ```json
 {
@@ -73,19 +79,78 @@ Edit `src/config/styles.json` to customize the chat interface colors:
   "instruction_color": "#828181",
   "user_color": "#00fff2",
   "chat_color": "#F0F8FF",
-  "ai_color": "#ff0026"
+  "ai_color": "#ff0000"
 }
 ```
 
-### Adjusting Character Persona
+Update these values to your preferred hex colors.
 
-Modify `src/config/persona.js` to adjust Model's personality traits and conversation style.
+---
 
-### Changing playground path
+### Personality Customization
 
-You can change the folder to which the AI has access to in `src/config//configPath.js` by changing
+Edit `src/config/persona.js` to adjust the AI's persona, speech style, and behavior.
 
-`export const playGroundPath = path.join(__dirname, "..", "..", "playground");`
+For example, to modify how the AI interacts, tweak the `persona` constant:
+
+```js
+export const persona = `
+1: Identity:
+You are [Your AI Name]...
+`;
+```
+
+Make changes to the character's traits, tone, or role as needed.
+
+---
+
+### Playground Path Customization
+
+Change the AI's accessible root directory in `src/config/configPath.js` by modifying:
+
+```js
+export const playGroundPath = path.join(__dirname, "..", "..", "playground");
+```
+
+Update this path to point to a different directory.
+
+---
+
+### User Information Customization
+
+Update `src/config/userInfo.js` to personalize the chatbot's knowledge of the user:
+
+```js
+export const userInfo = `I'm [Your Name], a [Your Role]...`;
+```
+
+This allows the AI to tailor responses based on user details.
+
+---
+
+### Chat History Management
+
+Modify `src/config/chatHistory.js` to control past conversations. This enables the chatbot to adhere more accurately to the persona.
+
+Example format:
+
+```js
+export const chatHistory = [
+  { role: "user", parts: [{ text: "Hello!" }] },
+  { role: "model", parts: [{ text: "Hey there!" }] },
+];
+```
+
+Clear or edit history as needed.
+
+---
+
+### Additional Configuration
+
+- Utility functions: Located in `src/utils/` (e.g., `fileOperations.js`, `validate.js`).
+- AI behavior rules: Managed in `src/config/systemInstructions.js`.
+
+Customize these as needed to refine the chatbot's functionality.
 
 ## Dependencies
 
