@@ -1,7 +1,7 @@
 import readline from "readline";
 import chalk from "chalk";
 import ora from "ora";
-import { emulateAgent } from "./utils/gemini.js";
+import { emulateAgent } from "./app.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -24,18 +24,8 @@ const colors = {
   system: chalk.hex(styles.system_color).bold,
 };
 
-// Create a readline interface
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: true,
-  prompt: "",
-});
-
-// Chat history
 let chatHistory = [];
 
-// Function to clear screen and display chat history
 const displayChatHistory = () => {
   console.clear();
   console.log(colors.welcome("Chat to Chizuru!\n"));
@@ -47,30 +37,41 @@ const displayChatHistory = () => {
         colors.chat(content)
     );
   });
-  process.stdout.write(colors.user("You: "));
 };
 
-// Process user input
-const handleInput = async (input) => {
-  if (!input.trim()) return;
+const getUserInput = () => {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
 
-  if (input.trim().toLowerCase() === "sayonara()") {
+    rl.question(colors.user("You: "), (input) => {
+      rl.close();
+      resolve(input);
+    });
+  });
+};
+
+const handleInput = async (input) => {
+  const trimmedInput = input.trim();
+  if (!trimmedInput) return true;
+
+  if (trimmedInput.toLowerCase() === "sayonara()") {
     console.log(colors.chat("\nThank you for chatting! Goodbye!"));
-    rl.close();
-    process.exit(0);
+    return false;
   }
 
-  if (input.trim().toLowerCase() === "reset()") {
+  if (trimmedInput.toLowerCase() === "reset()") {
     console.log(
       colors.system("System: ") + colors.chat("Resetting chat history...\n")
     );
-
     chatHistory = [];
     displayChatHistory();
-    return;
+    return true;
   }
 
-  chatHistory.push({ role: "user", content: input });
+  chatHistory.push({ role: "user", content: trimmedInput });
   displayChatHistory();
 
   const spinner = ora({
@@ -78,37 +79,37 @@ const handleInput = async (input) => {
     spinner: "dots",
   }).start();
   spinner.color = "red";
+
   try {
-    const response = await emulateAgent(input);
+    const response = await emulateAgent(trimmedInput);
     spinner.stop();
-    process.stdout.write("\r\x1b[K");
     chatHistory.push({ role: "ai", content: response });
     displayChatHistory();
   } catch (err) {
     spinner.stop();
-    process.stdout.write("\r\x1b[K");
     console.log(colors.system("System: ") + colors.chat("An error occurred."));
   }
+  return true;
 };
 
-// Start chat
-const startChat = () => {
+async function main() {
   displayChatHistory();
-  rl.on("line", async (input) => {
-    if (input.trim().toLowerCase() === "sayonara()") {
-      console.log(colors.system("\nThank you for chatting! Goodbye!"));
-      rl.close();
-      process.exit(0);
-    }
-    process.stdout.write("\x1B[1A\x1B[2K");
-    console.log(colors.user("You: ") + colors.chat(input));
-    await handleInput(input);
-  });
 
-  rl.on("SIGINT", () => {
-    console.log(colors.chat("\nChat ended by user. Goodbye!"));
-    process.exit(0);
-  });
-};
+  let running = true;
+  while (running) {
+    const input = await getUserInput();
+    running = await handleInput(input);
+  }
+  process.exit(0);
+}
 
-startChat();
+// Handle SIGINT gracefully
+process.on("SIGINT", () => {
+  console.log(colors.chat("\nChat ended by user. Goodbye!"));
+  process.exit(0);
+});
+
+main().catch((error) => {
+  console.error("Fatal error:", error);
+  process.exit(1);
+});

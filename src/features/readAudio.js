@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { isInPlayground } from "./validate.js";
+import { isInPlayground } from "../utils/validate.js";
 
 function fileToGenerativePart(filePath) {
   const base64Buffer = fs.readFileSync(filePath);

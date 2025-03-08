@@ -1,7 +1,7 @@
 import { GoogleAIFileManager, FileState } from "@google/generative-ai/server";
 import path from "path";
 import dotenv from "dotenv";
-import { isInPlayground } from "./validate.js";
+import { isInPlayground } from "../utils/validate.js";
 import fs from "fs";
 dotenv.config();
 

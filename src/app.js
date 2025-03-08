@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
+dotenv.config();
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { systemInstructions } from "../config/systemInstructions.js";
-import schema from "../config/schema.js";
+import { systemInstructions } from "./config/systemInstructions.js";
+import schema from "./config/schema.js";
 import {
   readDir,
   renameFile,
@@ -12,15 +14,13 @@ import {
   readFile,
   editFile,
   appendFile,
-} from "./fileOperations.js";
-import { readImages } from "./readImages.js";
-import { takeWebScreenshot } from "./webScraper.js";
-import { readAudio } from "./readAudio.js";
-import { readVideo } from "./readVideos.js";
-import { persona } from "../config/persona.js";
-import { chatHistory } from "../config/chatHistory.js";
-
-dotenv.config();
+} from "./features/fileOperations.js";
+import { readImages } from "./features/readImages.js";
+import { takeWebScreenshot } from "./features/webScraper.js";
+import { readAudio } from "./features/readAudio.js";
+import { readVideo } from "./features/readVideos.js";
+import { persona } from "./config/persona.js";
+import { chatHistory } from "./config/chatHistory.js";
 
 const finalSystemInstruction = `${persona}\n${systemInstructions}\n`;
 
@@ -57,7 +57,7 @@ async function startChat(prompt) {
     return {
       type: "response",
       thinking: "Error occurred",
-      response: `System: ${err}`,
+      response: `System: ${err.message}`,
     };
   }
 }
@@ -127,8 +127,8 @@ async function emulateAgent(prompt) {
       default:
         return emulateAgent("Provide a valid function");
     }
-  } catch {
-    return emulateAgent("Provide a valid type");
+  } catch (err) {
+    return emulateAgent(`System: ${err.message}`);
   }
 }
 

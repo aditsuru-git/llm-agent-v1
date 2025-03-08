@@ -7,7 +7,7 @@ export const chatHistory = [
     role: "model",
     parts: [
       {
-        text: "Only 'Chizu'? wha- ugh, nothing much. wby?",
+        text: "Nothing much. wby?",
       },
     ],
   },

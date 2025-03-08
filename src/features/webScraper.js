@@ -11,14 +11,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  * Takes a screenshot of a webpage with graceful error handling
  * @param {string} url - The URL to screenshot
  * @param {number} scrollPosition - Vertical scroll position (default: 0)
- * @returns {Promise<Object|string>} - Screenshot info object or error message
+ * @returns {Promise<Object>} - Screenshot info object or error message
  */
 async function takeWebScreenshot(url, scrollPosition = 0) {
   // Validate URL
   try {
     new URL(url);
   } catch {
-    return "System: Invalid URL provided";
+    return { status: "error", message: "System: Invalid URL provided" };
   }
 
   // Validate scroll position
@@ -30,7 +30,10 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
     try {
       fs.mkdirSync(screenshotsDir, { recursive: true });
     } catch {
-      return "System: Failed to create screenshots directory";
+      return {
+        status: "error",
+        message: "System: Failed to create screenshots directory",
+      };
     }
   }
 
@@ -69,7 +72,10 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
     });
 
     if (!navigationResult.ok()) {
-      return `System: Failed to load page: ${navigationResult.status()}`;
+      return {
+        status: "error",
+        message: `System: Failed to load page: ${navigationResult.status()}`,
+      };
     }
 
     // Wait for page load
@@ -79,7 +85,10 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
       .catch(() => false);
 
     if (!loadState) {
-      return "System: Page load timeout, could not complete operation";
+      return {
+        status: "error",
+        message: "System: Page load timeout, could not complete operation",
+      };
     }
 
     // Handle scrolling
@@ -103,6 +112,7 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
 
     // Return success result
     return {
+      status: "success",
       path: screenshotPath,
       context: {
         type: "webpage",
@@ -124,7 +134,10 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
         // Ignore cleanup errors
       }
     }
-    return `System: Failed to take screenshot: ${error.message}`;
+    return {
+      status: "error",
+      message: `System: Failed to take screenshot: ${error.message}`,
+    };
   } finally {
     // Cleanup browser resources
     if (context) await context.close().catch(() => {});
