@@ -28,9 +28,8 @@ let chatHistory = [];
 
 const displayChatHistory = () => {
   console.clear();
-  console.log(colors.welcome("Chat to Chizuru!\n"));
-  console.log(colors.instruction("(Type sayonara() to exit)"));
-  console.log(colors.instruction("(Type reset() to clear history)\n"));
+  console.log(colors.welcome(`Chat to ${styles.character_name}!\n`));
+  console.log(colors.instruction("(Type sayonara() to exit)\n"));
   chatHistory.forEach(({ role, content }) => {
     console.log(
       colors[role](`${role === "user" ? "You" : styles.character_name}: `) +
@@ -60,15 +59,6 @@ const handleInput = async (input) => {
   if (trimmedInput.toLowerCase() === "sayonara()") {
     console.log(colors.chat("\nThank you for chatting! Goodbye!"));
     return false;
-  }
-
-  if (trimmedInput.toLowerCase() === "reset()") {
-    console.log(
-      colors.system("System: ") + colors.chat("Resetting chat history...\n")
-    );
-    chatHistory = [];
-    displayChatHistory();
-    return true;
   }
 
   chatHistory.push({ role: "user", content: trimmedInput });
