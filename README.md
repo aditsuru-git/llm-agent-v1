@@ -1,4 +1,4 @@
-- This was my first working version—it's messy and buggy, but it helped me understand the fundamentals. Feel free to check it out, but **Version 2 will be a much cleaner, improved version.**
+> This was my first working version—it's messy and buggy, but it helped me understand the fundamentals. Feel free to check it out, but **version 2 will be a much cleaner, improved version.**
 
 # AI AGENT
 
