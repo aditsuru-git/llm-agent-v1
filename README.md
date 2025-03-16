@@ -91,8 +91,8 @@ You are [Your AI Name]...
 `;
 ```
 
-Make changes to the character's traits, tone, or role as needed.
-Note: Be sure to update the chat history as well to ensure the persona changes take full effect.
+- Make changes to the character's traits, tone, or role as needed.
+- Note: Be sure to update the chat history as well to ensure the persona changes take full effect.
 ---
 
 ### Playground Path Customization
