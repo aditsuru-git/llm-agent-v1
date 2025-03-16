@@ -1,7 +1,7 @@
 {
   "name": "llm-agent",
   "version": "1.0.0",
-  "description": "A CLI-based AI agent powered by Google's Gemini AI.",
+  "description": "A CLI-based AI agent powered by Google's Gemini.",
   "main": "index.js",
   "type": "module",
   "scripts": {
