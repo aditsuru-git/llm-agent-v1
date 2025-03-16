@@ -2,7 +2,7 @@
 
 # AI AGENT
 
-A CLI-based AI agent powered by Google's Gemini AI.
+A CLI-based AI agent powered by Google's Gemini.
 
 ## Prerequisites
 
