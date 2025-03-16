@@ -1,7 +1,7 @@
 {
   "name": "llm-agent",
   "version": "1.0.0",
-  "description": "A command-line chat application that lets you interact with a LLM agent, powered by Google's Gemini AI.",
+  "description": "A CLI-based AI agent powered by Google's Gemini AI.",
   "main": "index.js",
   "type": "module",
   "scripts": {
