@@ -1,17 +1,6 @@
 # AI AGENT
 
-A command-line chat application that lets you interact with a LLM agent, powered by Google's Gemini AI.
-
-## Features
-
-- Interactive CLI chat interface with color-coded messages
-- Different personality/character support
-- Chat history management with reset functionality
-- Customizable UI colors through configuration
-- File system operations support
-- Media handling capabilities (images, audio, video)
-- Web screenshot functionality
-- Stateful conversation with context retention
+A CLI-based AI agent powered by Google's Gemini AI.
 
 ## Prerequisites
 
@@ -101,7 +90,7 @@ You are [Your AI Name]...
 ```
 
 Make changes to the character's traits, tone, or role as needed.
-
+Note: Be sure to update the chat history as well to ensure the persona changes take full effect.
 ---
 
 ### Playground Path Customization
@@ -159,11 +148,3 @@ Customize these as needed to refine the chatbot's functionality.
 - `ora` - Elegant terminal spinners
 - `dotenv` - Environment variable management
 - `readline` - CLI interface handling
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
