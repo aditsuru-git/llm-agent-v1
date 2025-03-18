@@ -21,6 +21,7 @@ git clone https://github.com/aditsuru-git/llm-agent.git
 
 ```bash
 npm install
+npx playwright install
 ```
 
 3. Edit `.env` and add your Google Gemini API key:
