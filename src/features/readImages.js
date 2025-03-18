@@ -15,20 +15,24 @@ function fileToGenerativePart(filePath) {
 
 function readImages(filePath) {
   try {
+    // Ensure filePath is an array
+    if (!Array.isArray(filePath)) filePath = [filePath];
+
     if (!filePath.length)
       return "System: Provide image paths in proper format!";
 
     const fileParts = [];
-    filePath.forEach((file) => {
+
+    for (const file of filePath) {
       if (!fs.existsSync(file)) return "System: File path doesn't exist";
       if (!isInPlayground(file)) return "System: File out of reach";
-      else {
-        fileParts.push(fileToGenerativePart(file));
-      }
-    });
+
+      fileParts.push(fileToGenerativePart(file));
+    }
+
     return fileParts;
   } catch (err) {
-    return `System: Couldn't perform operation: ${err}`;
+    return `System: Couldn't perform operation: ${err.message}`;
   }
 }
 

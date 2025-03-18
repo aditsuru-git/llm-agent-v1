@@ -1,18 +1,10 @@
 import { chromium } from "playwright";
 import path from "path";
 import fs from "fs";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import { playGroundPath } from "../config/configPath.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const resolvedPlayGroundPath = fs.realpathSync(playGroundPath); // Resolve symlinks
 
-/**
- * Takes a screenshot of a webpage with graceful error handling
- * @param {string} url - The URL to screenshot
- * @param {number} scrollPosition - Vertical scroll position (default: 0)
- * @returns {Promise<Object>} - Screenshot info object or error message
- */
 async function takeWebScreenshot(url, scrollPosition = 0) {
   // Validate URL
   try {
@@ -21,11 +13,11 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
     return { status: "error", message: "System: Invalid URL provided" };
   }
 
-  // Validate scroll position
+  // Ensure scrollPosition is a valid number
   scrollPosition = Math.max(0, parseInt(scrollPosition) || 0);
 
-  // Ensure screenshots directory exists
-  const screenshotsDir = path.join(playGroundPath, "screenshots");
+  // Create screenshots directory if it doesn’t exist
+  const screenshotsDir = path.join(resolvedPlayGroundPath, "screenshots");
   if (!fs.existsSync(screenshotsDir)) {
     try {
       fs.mkdirSync(screenshotsDir, { recursive: true });
@@ -37,12 +29,12 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
     }
   }
 
-  // Generate unique filename
-  const urlObj = new URL(url);
-  const hostname = urlObj.hostname.replace(/[^a-z0-9]/gi, "-");
-  const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  // Generate a unique filename using crypto
+  const { hostname } = new URL(url);
+  const sanitizedHostname = hostname.replace(/[^a-z0-9]/gi, "-");
+  const uniqueId = crypto.randomUUID();
   const scrollSuffix = scrollPosition > 0 ? `-scroll${scrollPosition}` : "";
-  const filename = `${hostname}${scrollSuffix}-${uniqueId}.png`;
+  const filename = `${sanitizedHostname}${scrollSuffix}-${Date.now()}-${uniqueId}.png`;
   const screenshotPath = path.join(screenshotsDir, filename);
 
   let browser = null;
@@ -65,25 +57,27 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
 
     const page = await context.newPage();
 
-    // Navigate with timeout
-    const navigationResult = await page.goto(url, {
-      waitUntil: "domcontentloaded",
-      timeout: 30000,
-    });
-
-    if (!navigationResult.ok()) {
-      return {
-        status: "error",
-        message: `System: Failed to load page: ${navigationResult.status()}`,
-      };
+    // Retry logic for page navigation
+    let navigationSuccess = false;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+        navigationSuccess = true;
+        break;
+      } catch (err) {
+        if (attempt === 1) throw err; // Fail after 2 attempts
+      }
     }
 
-    // Wait for page load
+    if (!navigationSuccess) {
+      return { status: "error", message: "System: Failed to load page" };
+    }
+
+    // Wait for full page load
     const loadState = await page
       .waitForLoadState("load", { timeout: 30000 })
       .then(() => true)
       .catch(() => false);
-
     if (!loadState) {
       return {
         status: "error",
@@ -91,15 +85,12 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
       };
     }
 
-    // Handle scrolling
+    // Scroll if needed
     if (scrollPosition > 0) {
-      await page.evaluate((scrollY) => {
-        window.scrollTo({
-          top: scrollY,
-          behavior: "smooth",
-        });
-      }, scrollPosition);
-
+      await page.evaluate(
+        (scrollY) => window.scrollTo({ top: scrollY, behavior: "smooth" }),
+        scrollPosition
+      );
       await page.waitForTimeout(1000);
     }
 
@@ -110,36 +101,24 @@ async function takeWebScreenshot(url, scrollPosition = 0) {
       timeout: 10000,
     });
 
-    // Return success result
     return {
       status: "success",
       path: screenshotPath,
       context: {
         type: "webpage",
-        url: url,
-        scrollPosition: scrollPosition,
+        url,
+        scrollPosition,
         timestamp: new Date().toISOString(),
-        viewport: {
-          width: 1920,
-          height: 1080,
-        },
+        viewport: { width: 1920, height: 1080 },
       },
     };
   } catch (error) {
-    // Clean up partial screenshot
-    if (fs.existsSync(screenshotPath)) {
-      try {
-        fs.unlinkSync(screenshotPath);
-      } catch {
-        // Ignore cleanup errors
-      }
-    }
+    if (fs.existsSync(screenshotPath)) fs.unlinkSync(screenshotPath);
     return {
       status: "error",
       message: `System: Failed to take screenshot: ${error.message}`,
     };
   } finally {
-    // Cleanup browser resources
     if (context) await context.close().catch(() => {});
     if (browser) await browser.close().catch(() => {});
   }
