@@ -50,7 +50,6 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#customization-guide">Customization Guide</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
@@ -218,7 +217,7 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## Acknowledgments
 
-- [Gemini SDK Documentation](https://choosealicense.com)
+- [Gemini SDK Documentation][gemini-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -243,5 +242,5 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 <!-- TECH STACK BADGE -->
 
 [gemini]: https://img.shields.io/badge/GEMINI-white?style=for-the-badge&logo=googlegemini&logoColor=blue
-[gemini-url]: ${TECH_URL}
+[gemini-url]: https://ai.google.dev/gemini-api/docs
 [JavaScript]: https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E
