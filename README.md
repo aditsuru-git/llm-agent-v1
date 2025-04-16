@@ -12,7 +12,6 @@
 [![Issues][issues-shield]][issues-url]
 [![License][license-shield]][license-url]
 
-<h1></h1>
 <br></br>
 <div align="center">
   <p align="center">
@@ -75,7 +74,7 @@ This was my first working version—it's messy and buggy, but it helped me under
 
 ## Getting Started
 
-To get started with LLM AGENT, follow these simple steps.
+To get started with the app, follow these simple steps:
 
 ### Prerequisites
 
