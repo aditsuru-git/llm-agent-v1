@@ -23,8 +23,6 @@
       <!-- <a href="https://github.com/aditsuru-git/llm-agent-v1/docs"><strong>Explore the docs »</strong></a> -->
       <br />
       <br />
-      <a href="https://github.com/aditsuru-git/llm-agent-v1">View Demo</a>
-      ·
       <a href="https://github.com/aditsuru-git/llm-agent-v1/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
       ·
       <a href="https://github.com/aditsuru-git/llm-agent-v1/issues/new?labels=enhancement&template=feature-request.md">Request Feature</a>
@@ -63,7 +61,7 @@
   <img src="./docs/assets/demo.png" alt="Product Screenshot" width="100%" style="max-width: 800px;">
 </div>
 
-This was my first working version—it's messy and buggy, but it helped me understand the fundamentals. Feel free to check it out, but version 2 will be a much cleaner, improved version.
+This was my first working version—it's messy and buggy, but it helped me understand the fundamentals. Feel free to check it out, but [version 2](https://github.com/aditsuru-git/llm-agent-v2) will be a much cleaner, improved version.
 
 ### Built With
 
@@ -80,7 +78,7 @@ To get started with the app, follow these simple steps:
 
 List things needed to use the software and how to install them:
 
-- [Node.js (v14.0.0 or higher)](https://nodejs.org/en)
+- [Node.js](https://nodejs.org/en)
 - [Google Gemini API key](https://aistudio.google.com/app/apikey)
 
 ### Installation
