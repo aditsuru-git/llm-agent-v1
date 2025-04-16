@@ -12,6 +12,7 @@
 [![Issues][issues-shield]][issues-url]
 [![License][license-shield]][license-url]
 
+<h1></h1>
 <div align="center">
   <p align="center">
     <img src="./docs/assets/logo.svg" alt="Logo" width="100" height="100">
