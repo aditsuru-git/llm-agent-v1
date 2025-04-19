@@ -222,7 +222,7 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 <h1></h1>
 <div align="center">
-  <img src="https://ik.imagekit.io/aditsuru/Personal/footer.png?updatedAt=1744794750533" alt="Footer Banner" width="100%" style="max-width: 1200px;">
+  <img src="https://github.com/aditsuru-git/readme-template/blob/main/assets/footer.png?raw=true" alt="Footer Banner" width="100%" style="max-width: 1200px;">
 </div>
 
 <!-- MARKDOWN LINKS & IMAGES -->
