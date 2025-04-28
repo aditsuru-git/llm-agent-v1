@@ -1,7 +1,7 @@
 # LLM AGENT
 
 <div align="center">
-  <img src="https://media.discordapp.net/attachments/1307699446875689082/1361961879781511229/yet-another-banner.png?ex=6800a958&is=67ff57d8&hm=42d2be61f34510d00b7fb95b272dc2cdae646fd1ac7f12b0294c305eee5cbb96&=&format=webp&quality=lossless" alt="Project Banner" width="100%" style="max-width: 1200px;">
+  <img src="https://github.com/aditsuru-git/readme-template/blob/main/assets/header.png?raw=true" alt="Project Banner" width="100%" style="max-width: 1200px;">
 </div>
 
 <a id="readme-top"></a>
